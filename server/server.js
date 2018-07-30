@@ -31,6 +31,13 @@ app.use(bodyParser.json());
 app.param('id', function(req, res, next, id) {
   // fill this out to find the lion based off the id
   // and attach it to req.lion. Rember to call next()
+  let lion = _.find(lions, {id: id});
+  if (lion) {
+      req.lion = lion;
+      next();
+  }else{
+      res.send();
+  }
 });
 
 app.get('/lions', function(req, res){
@@ -65,6 +72,10 @@ app.put('/lions/:id', function(req, res) {
     res.json(updatedLion);
   }
 });
+
+app.use( (err, req, res, next) => {
+    err ? res.status(500).send(err) : null;
+})
 
 app.listen(3000);
 console.log('on port 3000');
